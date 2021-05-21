@@ -4,23 +4,32 @@
 const { join } = require('path')
 
 /**
- * @param {array} opt.disallowBotNames List of bot names to disallow
+ * @param {array} opt.disallowedCrawlers List of crawlers to disallow
+ * @param {array} opt.disallowedUrls List of relative URLs to disallow
  * @param {string} opt.sitemapUrl Sitemap.xml URL
  * @param {string} opt.path Deploy path
  */
 module.exports = async(fileMap, opt) => {
-  let disallow
+  const rules = []
 
-  if (opt.disallowBotNames) {
-    disallow = opt.disallowBotNames
-      .map(botName => `User-agent: ${botName}\nDisallow: /`)
+  if (opt.disallowedCrawlers) {
+    rules.push(opt.disallowedCrawlers
+      .map(crawlerName => [
+        `User-agent: ${crawlerName}`,
+        'Disallow: /',
+      ]))
+  }
+
+  if (opt.disallowedUrls) {
+    rules.push('User-agent: *',
+      opt.disallowedUrls.map(url => `Disallow: ${url}`))
   }
 
   const content = [
-    ...disallow,
+    rules,
     '', // Extra newline
     `Sitemap: ${opt.sitemapUrl}`
-  ].join('\n')
+  ].flat(3).join('\n')
 
   const fullPath = join(opt.path, 'robots.txt')
 

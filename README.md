@@ -24,9 +24,16 @@ await builder.build({
       '@deskeen/web-builder-create-robots-txt',
       {
         path: '/deploy/path', // Deploy path
-        sitemapUrl: 'https://example.com/sitemap.xml', // sitemap URL
-        disallowBotNames: [
-          // List of bot names to disallow
+        sitemapUrl: 'https://example.com/sitemap.xml', // Sitemap URL
+        disallowedCrawlers: [
+          // List of crawlers to exclude
+          // Example:
+          // 'Facebot'
+        ],
+        disallowedUrls: [
+          // List of URLs to exclude
+          // Example:
+          // '/login'
         ],
       }
     ]
@@ -35,7 +42,7 @@ await builder.build({
 ```
 
 
-## Popular Crawlers
+## Popular Crawler Names
 
 - Apple: `Applebot`
 - Amazon: `ia_archiver`
